@@ -1,6 +1,22 @@
 import { io, Socket } from 'socket.io-client';
 
-const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'http://localhost:3001';
+// Determine socket URL:
+// - If VITE_SOCKET_URL env var is set, use it
+// - In dev mode (port 5173), connect to backend on port 3001
+// - Otherwise (production), connect to same origin
+function getSocketUrl(): string {
+  if (import.meta.env.VITE_SOCKET_URL) {
+    return import.meta.env.VITE_SOCKET_URL;
+  }
+  // Check if we're on the Vite dev server port
+  if (typeof window !== 'undefined' && window.location.port === '5173') {
+    return 'http://localhost:3001';
+  }
+  // Production: same origin
+  return '';
+}
+
+const SOCKET_URL = getSocketUrl();
 
 let socket: Socket | null = null;
 

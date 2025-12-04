@@ -55,11 +55,9 @@ export function CodeEditor({
     if (!editorRef.current) return;
 
     const decorations: editor.IModelDeltaDecoration[] = [];
-    const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7'];
     let colorIndex = 0;
 
     remoteCursors.forEach(({ position, userName }) => {
-      const color = colors[colorIndex % colors.length];
       colorIndex++;
 
       decorations.push({

@@ -2,7 +2,21 @@ import { createContext, useContext, useEffect, useState, useCallback, useRef, ty
 import { io, Socket } from 'socket.io-client';
 import type { SessionState, Participant, CursorPosition } from '../types/index';
 
-const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'http://localhost:3001';
+// Determine socket URL:
+// - If VITE_SOCKET_URL env var is set, use it
+// - In dev mode (port 5173), connect to backend on port 3001
+// - Otherwise (production), connect to same origin
+function getSocketUrl(): string {
+  if (import.meta.env.VITE_SOCKET_URL) {
+    return import.meta.env.VITE_SOCKET_URL;
+  }
+  if (typeof window !== 'undefined' && window.location.port === '5173') {
+    return 'http://localhost:3001';
+  }
+  return '';
+}
+
+const SOCKET_URL = getSocketUrl();
 
 interface SocketContextValue {
   isConnected: boolean;

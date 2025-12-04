@@ -129,9 +129,27 @@ The integration tests cover:
 - User disconnect notifications
 - Session state persistence for late joiners
 
+### Docker
+
+**Build and run with Docker:**
+```bash
+# Build the image
+docker build -t live-coding-platform .
+
+# Run the container
+docker run -p 3000:3000 live-coding-platform
+```
+
+The application will be available at http://localhost:3000
+
+**With custom port:**
+```bash
+docker run -p 8080:3000 -e PORT=3000 live-coding-platform
+```
+
 ### Usage
 
-1. Open http://localhost:5173 in your browser
+1. Open http://localhost:5173 in your browser (or http://localhost:3000 if using Docker)
 2. Enter your name and click **"Create Session"**
 3. Click **"Copy Link"** to copy the session URL
 4. Share the link with your interview candidate
