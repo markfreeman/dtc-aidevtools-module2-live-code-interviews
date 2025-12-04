@@ -31,7 +31,6 @@ A real-time collaborative coding platform designed for technical interviews. Int
 | [Socket.IO Client](https://socket.io/docs/v4/client-api/) | WebSocket client for real-time sync |
 | [React Router](https://reactrouter.com/) | Client-side routing |
 | [Pyodide](https://pyodide.org/) | Python runtime compiled to WebAssembly |
-| [QuickJS](https://github.com/aspect-build/aspect-build-plugins) | JavaScript runtime in WebAssembly (via quickjs-emscripten) |
 
 ## Project Structure
 
@@ -59,7 +58,7 @@ A real-time collaborative coding platform designed for technical interviews. Int
 │   │   │   └── useCodeExecution.ts # WASM execution hook
 │   │   ├── services/
 │   │   │   ├── socket.ts         # Socket.IO client setup
-│   │   │   └── wasmExecutor.ts   # Pyodide/QuickJS execution
+│   │   │   └── wasmExecutor.ts   # Code execution (Pyodide for Python, sandboxed iframe for JS)
 │   │   └── types/
 │   │       └── index.ts
 │   ├── package.json
@@ -98,6 +97,38 @@ npm run dev:backend
 npm run dev -w frontend
 ```
 
+### Running Tests
+
+The project includes comprehensive integration tests that verify frontend-backend communication without needing to run the application manually.
+
+**Run all tests:**
+```bash
+npm test
+```
+
+**Run tests in watch mode (re-runs on file changes):**
+```bash
+npm run test:watch
+```
+
+**Run tests with coverage report:**
+```bash
+npm run test:coverage
+```
+
+**Run backend tests only:**
+```bash
+npm run test -w backend
+```
+
+The integration tests cover:
+- Session creation and joining
+- Real-time code synchronization between participants
+- Language change propagation
+- Cursor position broadcasting
+- User disconnect notifications
+- Session state persistence for late joiners
+
 ### Usage
 
 1. Open http://localhost:5173 in your browser
@@ -115,8 +146,8 @@ npm run dev -w frontend
 │   React App     │◄──────────────────►│   Node.js       │
 │                 │                    │   + Socket.IO   │
 │  Monaco Editor  │                    │                 │
-│  WASM Runtime   │                    │  Session Store  │
-│  (Pyodide/QJS)  │                    │  (in-memory)    │
+│  Code Execution │                    │  Session Store  │
+│  (Pyodide/iframe)│                    │  (in-memory)    │
 └─────────────────┘                    └─────────────────┘
 ```
 
@@ -140,6 +171,6 @@ npm run dev -w frontend
 ## Notes
 
 - Sessions are stored in-memory and will be lost on server restart
-- Code execution happens entirely in the browser via WebAssembly
+- Code execution happens entirely in the browser (Python via WebAssembly, JavaScript via sandboxed iframe)
 - Python runtime (Pyodide) takes a few seconds to load initially
-- JavaScript runtime (QuickJS) loads almost instantly
+- JavaScript execution is available immediately
