@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: live-coding-platform
+    runtime: docker
+    repo: https://github.com/markfreeman/dtc-aidevtools-module2-live-code-interviews
+    branch: main
+    plan: free
+    healthCheckPath: /health
+    # PORT is automatically set by Render - no need to specify it

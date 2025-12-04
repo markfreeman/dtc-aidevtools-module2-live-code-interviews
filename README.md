@@ -186,6 +186,45 @@ docker run -p 8080:3000 -e PORT=3000 live-coding-platform
 | `user:joined` | Server → Clients | New participant notification |
 | `user:left` | Server → Clients | Participant left notification |
 
+## Deployment
+
+### Deploy to Render
+
+This project is configured for deployment to [Render](https://render.com) using Docker.
+
+**Option 1: Using Render Blueprint (recommended)**
+
+1. Fork this repository to your GitHub account
+2. Update `render.yaml` with your repository URL
+3. Go to [Render Dashboard](https://dashboard.render.com) → **New** → **Blueprint**
+4. Connect your GitHub repo and Render will auto-detect `render.yaml`
+
+**Option 2: Manual Setup**
+
+1. Go to [Render Dashboard](https://dashboard.render.com) → **New** → **Web Service**
+2. Connect your GitHub repository
+3. Configure:
+   - **Environment**: Docker
+   - **Branch**: main
+   - **Health Check Path**: /health
+
+### CI/CD with GitHub Actions
+
+The project includes a GitHub Actions workflow (`.github/workflows/ci.yml`) that:
+- Runs tests on every push and pull request
+- Deploys to Render on pushes to `main` (after tests pass)
+
+**Setup:**
+
+1. In Render, go to your service → **Settings** → **Deploy Hook**
+2. Copy the Deploy Hook URL
+3. In GitHub, go to your repo → **Settings** → **Secrets and variables** → **Actions**
+4. Add a new secret:
+   - Name: `RENDER_DEPLOY_HOOK_URL`
+   - Value: (paste the Deploy Hook URL)
+
+Now pushes to `main` will automatically run tests and deploy if they pass.
+
 ## Notes
 
 - Sessions are stored in-memory and will be lost on server restart
